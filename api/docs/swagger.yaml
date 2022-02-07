@@ -1,42 +1,120 @@
-basePath: /api
+basePath: /
 definitions:
   models.CreateUser:
     properties:
-      age:
-        type: integer
-      email:
+      address:
+        type: string
+      birth_date:
         type: string
       first_name:
         type: string
+      is_active:
+        type: boolean
       last_name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      role:
+        enum:
+        - super_admin
+        - ' branch_admin'
+        type: string
+      username:
         type: string
     type: object
-  models.UpdateUser:
+  models.ErrorModel:
     properties:
-      age:
-        type: integer
-      email:
+      code:
+        type: string
+      error:
+        type: object
+      message:
+        type: string
+    type: object
+  models.LoginModel:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.SuccessModel:
+    properties:
+      code:
+        type: string
+      data:
+        type: object
+      message:
+        type: string
+    type: object
+  models.Teacher:
+    properties:
+      address:
+        type: string
+      birth_date:
+        type: string
+      branch_id:
+        type: string
+      created_at:
         type: string
       first_name:
         type: string
-      id:
+      guid:
         type: string
       last_name:
         type: string
+      phone_number:
+        type: string
+      salary:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  models.UpdateTeacher:
+    properties:
+      address:
+        type: string
+      birth_date:
+        type: string
+      branch_id:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      salary:
+        type: number
     type: object
   models.User:
     properties:
-      age:
-        type: integer
-      created_at:
+      birth_date:
         type: string
-      email:
+      created_at:
         type: string
       first_name:
         type: string
       id:
         type: string
+      is_active:
+        type: boolean
       last_name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      role:
+        enum:
+        - super_admin
+        - ' branch_admin'
+        type: string
+      updated_at:
+        type: string
+      username:
         type: string
     type: object
 host: localhost:8080
@@ -46,14 +124,208 @@ info:
     name: API Support
     url: http://www.swagger.io/support
   description: This is a sample server celler server.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
+  license: {}
   title: Test Task
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginModel'
+      produces:
+      - application/json
+      responses:
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: login
+      tags:
+      - user
+  /teacher:
+    get:
+      consumes:
+      - application/json
+      description: get all teachers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Teacher'
+                  type: array
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: get all teachers
+      tags:
+      - teacher
+    post:
+      consumes:
+      - application/json
+      description: create teacher
+      parameters:
+      - description: teacher
+        in: body
+        name: teacher
+        required: true
+        schema:
+          $ref: '#/definitions/models.Teacher'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Teacher'
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: create teacher
+      tags:
+      - teacher
+  /teacher/{guid}:
+    delete:
+      consumes:
+      - application/json
+      description: delete teacher
+      parameters:
+      - description: guid
+        in: path
+        name: guid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: delete teacher
+      tags:
+      - teacher
+    get:
+      consumes:
+      - application/json
+      description: get teacher
+      parameters:
+      - description: guid
+        in: path
+        name: guid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Teacher'
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: get teacher
+      tags:
+      - teacher
+    put:
+      consumes:
+      - application/json
+      description: update teacher
+      parameters:
+      - description: teacher
+        in: body
+        name: teacher
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTeacher'
+      - description: guid
+        in: path
+        name: guid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Teacher'
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: update teacher
+      tags:
+      - teacher
   /user:
+    get:
+      consumes:
+      - application/json
+      description: get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/models.SuccessModel'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.User'
+                  type: array
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorModel'
+      summary: get all users
+      tags:
+      - user
     post:
       consumes:
       - application/json
@@ -74,28 +346,7 @@ paths:
             $ref: '#/definitions/models.User'
       summary: Create user
       tags:
-      - User
-    put:
-      consumes:
-      - application/json
-      description: Update user
-      parameters:
-      - description: entity
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/models.UpdateUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-      summary: Update user
-      tags:
-      - User
+      - user
   /user/{id}:
     get:
       consumes:
@@ -117,7 +368,4 @@ paths:
       summary: Get user
       tags:
       - User
-securityDefinitions:
-  BasicAuth:
-    type: basic
 swagger: "2.0"

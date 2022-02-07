@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -8,7 +9,6 @@ import (
 	"github.com/abbos-ron2/go_postgresql/config"
 	"github.com/abbos-ron2/go_postgresql/service"
 	"github.com/abbos-ron2/go_postgresql/storage"
-	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -28,8 +28,8 @@ func main() {
 		cfg.PostgresDatabase,
 	)
 
-	db, err := sqlx.Connect("postgres", psqlConnString)
-
+	// db, err := sqlx.Connect("postgres", psqlConnString)
+	db, err := sql.Open("postgres", psqlConnString)
 	if err != nil {
 		log.Panic("error connecting to postgres", err)
 	}

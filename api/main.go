@@ -13,19 +13,11 @@ import (
 // @title           Test Task
 // @version         1.0
 // @description     This is a sample server celler server.
-// @termsOfService  http://swagger.io/terms/
-
 // @contact.name   API Support
 // @contact.url    http://www.swagger.io/support
 // @contact.email  support@swagger.io
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host      localhost:8080
-// @BasePath  /api
-
-// @securityDefinitions.basic  BasicAuth
+// @BasePath  /
 func New(serviceManager service.ServiceManager) *gin.Engine {
 	router := gin.Default()
 
@@ -38,11 +30,22 @@ func New(serviceManager service.ServiceManager) *gin.Engine {
 
 	handler := handlers.NewHandler(serviceManager)
 
-	api := router.Group("/api")
+	api := router.Group("/")
 	{
-		api.POST("/user", handler.User.Create)
-		api.PUT("/user", handler.User.Update)
-		api.GET("/user/:id", handler.User.Get)
+		api.POST("/login", handler.Login)
+
+		api.POST("/user", handler.CreateUser)
+		api.GET("/user", handler.GetAllUsers)
+		api.GET("/user/:id", handler.GetUser)
+		// api.PUT("/user", handler.UpdateUser)
+		// api.DELETE("/user/:id", handler.DeleteUser)
+
+		api.POST("/teacher", handler.CreateTeacher)
+		api.GET("/teacher", handler.GetAllTeachers)
+		api.GET("/teacher/:id", handler.GetTeacher)
+		api.PUT("/teacher", handler.UpdateTeacher)
+		api.DELETE("/teacher/:id", handler.DeleteTeacher)
+
 	}
 
 	// swagger
